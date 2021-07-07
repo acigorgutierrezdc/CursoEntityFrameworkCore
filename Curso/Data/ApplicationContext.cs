@@ -17,6 +17,7 @@ namespace CursoEFCore.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            //Igor - 07072021 - Interessante ressaltar as propriedades maxRetry do EF.
             optionsBuilder
                 .UseLoggerFactory(_logger)
                 .EnableSensitiveDataLogging()
@@ -33,6 +34,7 @@ namespace CursoEFCore.Data
             MapearPropriedadesEsquecidas(modelBuilder);
         }
 
+        //Igor - 07072021 - Este método é perigoso pois enfia varchar e cria os campos faltando, criando incoscistencia no BD.
         private void MapearPropriedadesEsquecidas(ModelBuilder modelBuilder)
         {
             foreach(var entity in modelBuilder.Model.GetEntityTypes())

@@ -13,6 +13,8 @@ namespace CursoEFCore
         {
             using var db = new Data.ApplicationContext();
             db.Database.Migrate();
+
+            //Igor 07072021 - Método interessante que verifica se exsite atualizações no BD, não necessitando utilizar o Update-Database no prompt de comando.
             var existe = db.Database.GetPendingMigrations().Any();
             if (existe)
             {
@@ -34,6 +36,8 @@ namespace CursoEFCore
 
             //var cliente = db.Clientes.Find(2);
             var cliente = new Cliente { Id = 3};
+
+            //Igor - 07072021 - Estas 3 chamadas abaixo, são interessantes pois fazem a mesma coisa, com a diferença de utilização assincrona do BD. Vale ressaltar.
             //db.Clientes.Remove(cliente);
             //db.Remove(cliente);
             db.Entry(cliente).State = EntityState.Deleted;
@@ -67,6 +71,7 @@ namespace CursoEFCore
         private static void ConsultarPedidoCarregamentoAdiantado()
         {
             using var db = new Data.ApplicationContext();
+            //Igor - 07072021 - Este include abaixo é interessante pois ele inclui os objetos filhos a entidade atual, conforme código abaixo.
             var pedidos = db
                 .Pedidos
                 .Include(p => p.Itens)
@@ -111,6 +116,7 @@ namespace CursoEFCore
         private static void ConsultarDados()
         {
             using var db = new Data.ApplicationContext();
+            //Igor - 07072021 - Abaixo utilização de linq para Select e utilização dos métodos do EF pra o Select.
             //var consultaPorSintaxe = (from c in db.Clientes where c.Id>0 select c).ToList();
             var consultaPorMetodo = db.Clientes
                 .Where(p => p.Id > 0)
@@ -165,7 +171,7 @@ namespace CursoEFCore
                 },
             };
 
-
+            //Igor - 07072021 - O addRange é interessante pois o EF economiza inserts no BD, melhorando a performance.
             using var db = new Data.ApplicationContext();
             //db.AddRange(produto, cliente);
             db.Set<Cliente>().AddRange(listaClientes);
